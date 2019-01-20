@@ -28,11 +28,6 @@ oc new-app --docker-image=c3smonkey/bluegreen:green \
     --name=green
 ```
 
-## Expose Service (Green)
-```
-oc expose service green --name=bluegreen --port=8080
-```
-    
 ## Switch Service To Green
 ```
 oc patch route/bluegreen -p '{"spec":{"to":{"name":"green"}}}' 
@@ -55,10 +50,7 @@ oc delete all --selector app=green
 ```
 
 
-## Docker Build
-```
-docker build -t c3smonkey/bluegreen:latest .
-```
+
 
 
 
