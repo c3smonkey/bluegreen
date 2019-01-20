@@ -14,6 +14,8 @@ fun main(args: Array<String>) {
 
     val rootDiv = document.getElementById("root")
 
+    document.title = "Green";
+
     render(rootDiv) {
        blueGreenUI()
     }
