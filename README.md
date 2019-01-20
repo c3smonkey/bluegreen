@@ -49,6 +49,8 @@ oc delete all --selector app=blue
 oc delete all --selector app=green
 ```
 
+![Blue Green Deployment](../master/bluegreen.png)
+
 
 
 
