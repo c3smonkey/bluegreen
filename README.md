@@ -1,5 +1,8 @@
 
 # Openshift 
+
+![Blue Green Deployment](../bluegreen.png)
+
 ## Create Project
 ```
 oc new-project bluegreen \
@@ -48,10 +51,6 @@ oc get all --selector app=green
 oc delete all --selector app=blue
 oc delete all --selector app=green
 ```
-
-![Blue Green Deployment](../master/bluegreen.png)
-
-
 
 
 
