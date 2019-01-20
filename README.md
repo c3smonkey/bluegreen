@@ -1,7 +1,7 @@
 
 # Openshift 
 
-![Blue Green Deployment](../bluegreen.png)
+![Blue Green Deployment](../master/bluegreen.png)
 
 ## Create Project
 ```
