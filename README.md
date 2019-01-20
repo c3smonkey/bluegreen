@@ -52,11 +52,10 @@ oc delete all --selector app=blue
 oc delete all --selector app=green
 ```
 
-
-
-
-
-
+# Get Title
+```
+for x in (seq 11); http http://bluegreen-bluegreen.apps.k8s-monkey.ch | grep "<title *" | awk '{print $14}'; end
+```
 
 # React Kotlin App
 This project was bootstrapped with [Create React Kotlin App](https://github.com/JetBrains/create-react-kotlin-app).
