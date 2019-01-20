@@ -33,8 +33,8 @@ fun RBuilder.blueGreenUI() {
         div {
             attrs.title = "BlueGreen"
             attrs.style = js {
-                 background = "green"
-//                background = "blue"
+                //  background = "green"
+               background = "blue"
                 height = "200px"
                 width = "200px"
                 borderradius = "50%"
