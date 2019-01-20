@@ -5,29 +5,23 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
-
       - restore_cache: # special step to restore the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
-    
       - run:
           name: Setup Dependencies
           command: npm install
-     
       - run:
           name: Setup Code Climate test-reporter
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-     
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-     
       - run:
           name: Run Build
           command: npm build # yarn build
-
       # - run: npm run build-script
       - run: npx semantic-release
 
@@ -69,13 +63,15 @@ jobs:
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/app.tar          
+            - /caches/app.tar        
       - deploy:
           name: Push application Docker image
           command: |
            TAG=${CIRCLE_SHA1}
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               TAG=latest
+            else
+              TAG=${CIRCLE_BRANCH}
             fi
             docker build -t $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG .
             docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
