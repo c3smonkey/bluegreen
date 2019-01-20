@@ -67,25 +67,25 @@ jobs:
 #          command: |
 #            docker-compose -f ./docker-compose.test.yml up
       # build and push Docker image
-      - run: |
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            TAG=$CIRCLE_BUILD_NUM
-            TAG=latest
+      # - run: |
+      #     TAG=${CIRCLE_SHA1}
+      #     if [ "${CIRCLE_BRANCH}" == "master" ]; then
+      #       TAG=latest
+      #     fi
+      #     docker build -t $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG .
+      #     docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      #     docker push $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG
 
+      - deploy:
+          name: Push application Docker image
+          command: |
+           TAG=${CIRCLE_SHA1}
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              TAG=latest
+            fi
             docker build -t $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG .
-
             docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
             docker push $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG
-          fi
-#      - deploy:
-#          name: Push application Docker image
-#          command: |
-#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#              login="$(aws ecr get-login)"
-#              ${login}
-#              docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-#              docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-#            fi
   release:
     docker:
       - image: circleci/node:10
