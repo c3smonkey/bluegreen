@@ -55,7 +55,10 @@ oc delete all --selector app=green
 ```
 
 
-
+## Docker Build
+```
+docker build -t c3smonkey/bluegreen:latest .
+```
 
 
 
