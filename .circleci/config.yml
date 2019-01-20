@@ -5,26 +5,34 @@ jobs:
       - image: circleci/node:10
     steps:
       - checkout
+
       - restore_cache: # special step to restore the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
+    
       - run:
           name: Setup Dependencies
           command: npm install
+     
       - run:
           name: Setup Code Climate test-reporter
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
+     
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+     
       - run:
           name: Run Build
           command: npm build # yarn build
 
+      # - run: npm run build-script
+      - run: npx semantic-release
+
 # https://circleci.com/blog/how-to-build-a-docker-image-on-circleci-2-0/
-  dockerize:
+  docker:
     working_directory: /app
     docker:
         - image: docker:17.05.0-ce-git
@@ -61,21 +69,7 @@ jobs:
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - /caches/app.tar
-#      - run:
-#          name: Run tests
-#          command: |
-#            docker-compose -f ./docker-compose.test.yml up
-      # build and push Docker image
-      # - run: |
-      #     TAG=${CIRCLE_SHA1}
-      #     if [ "${CIRCLE_BRANCH}" == "master" ]; then
-      #       TAG=latest
-      #     fi
-      #     docker build -t $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG .
-      #     docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      #     docker push $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG
-
+            - /caches/app.tar          
       - deploy:
           name: Push application Docker image
           command: |
@@ -86,21 +80,12 @@ jobs:
             docker build -t $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG .
             docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
             docker push $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME:$TAG
-  release:
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - run: npm install
-      # Run optional required steps before releasing
-      # - run: npm run build-script
-      - run: npx semantic-release
-
+ 
 workflows:
   version: 2
   build:
     jobs:
       - build
-      - release
-      - dockerize
-
+      - docker:
+          requires:
+            - build
