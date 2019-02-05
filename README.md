@@ -20,7 +20,7 @@ oc new-app --docker-image=c3smonkey/bluegreen:blue \
 
 ## Expose Service (Blue)
 ```
-oc expose service blue --name=bluegreen --port=8080
+oc expose service blue --name=bluegreen
 ```
 
 ## Deploy (Green)
